@@ -25,9 +25,11 @@ app.configure(function(){
 		res.renderLayout = function( template, layout, options, cb ){
 			options || ( options = {} );
 			var self = this;
-			res.render(template, options, function (error, result) {
-				if (error) return self.req.next(error);
-				options.body = result;
+			res.render(template, options, function (err, result) {
+				if( err ){
+					return self.req.next( err );
+				}
+				options[ options.subName||"body" ] = result;
 				res.render(layout, options, cb);
 			});
 		};
@@ -36,16 +38,9 @@ app.configure(function(){
 	app.use( express.bodyParser() );
 	app.use( express.methodOverride() );
 	app.use( app.router );
-
-	app.locals({
-		scripts: [ "http://code.jquery.com/jquery-1.9.1.min.js", "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js" ],
-		styles: [ "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css" ]
-	});
 });
 
 app.configure( "development", function(){
-	app.locals.scripts.push( "/js/bundle.js" );
-	app.locals.styles.push( "/css/style.css" );
 	app.use( express.static(path.join(__dirname, "assets" )) );
 	app.use( express.logger("dev") );
 	app.use(
@@ -53,13 +48,11 @@ app.configure( "development", function(){
 				dumpExceptions: true
 		})
 	);
-});
-
-app.configure( "production", function(){
-	app.use( express.static( path.join(__dirname, "public" ) ) );
-	app.locals.scripts.push( config.js );
-	app.locals.styles.push( config.css );
-	app.use( express.errorHandler() );
+	app.locals({
+		item: "",
+		itemsList: "",
+		index: ""
+	});
 });
 
 /*
@@ -77,8 +70,7 @@ app.configure( "development", function(){
 					filename: file,
 					pretty: true,
 					client: true,
-					compileDebug: true,
-					debug: true
+					compileDebug: true
 				}));
 			}
 		]
@@ -87,7 +79,50 @@ app.configure( "development", function(){
 });
 
 app.get( "/", function( req, res ){
-	res.renderLayout( "first", "layout" );
+	debug( "root route" );
+	res.renderLayout( "root", "layout", {
+		subName: "index"
+	});
+});
+
+app.get( "/list", function( req, res ){
+	debug( "list route" );
+	var data = _.range( 0, 20 ).map(function( i ){
+		return {
+			id: i,
+			name: "name#" + i
+		};
+	});
+	res.format({
+		"html": function(){
+			res.renderLayout( "list", "layout", {
+				items: data,
+				subName: "itemsList"
+			});
+		},
+		"json": function(){
+			res.json( data );
+		}
+	});
+});
+
+app.get( "/list/:id", function( req, res ){
+	debug( "list item route" );
+	var data = {
+		id: req.param( "id" ),
+		name: "name#" + req.param( "id" )
+	};
+	res.format({
+		"html": function(){
+			res.renderLayout( "list-item", "layout", {
+				item: data,
+				subName: "item"
+			});
+		},
+		"json": function(){
+			res.json( data );
+		}
+	});
 });
 /*
 	creating the http server

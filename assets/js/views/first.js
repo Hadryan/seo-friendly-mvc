@@ -1,6 +1,6 @@
 var
 	Backbone = require( "backbone" ),
-	firstTemplate = require( "../../../views/first.jade" ),
+	firstTemplate = require( "../../../views/root.jade" ),
 	layoutTemplate = require( "../../../views/layout.jade" );
 
 var FirstView = Backbone.View.extend({

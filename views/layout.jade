@@ -2,26 +2,22 @@
 html
 	head
 		meta(name="viewport",content="width=device-width, initial-scale=1.0")
-		- each style in styles
-			link(rel="stylesheet", href=style)
+		style
+			.menu{
+				width: 200px;
+				margin: auto;
+			}
+			.menu a{
+				margin: 10px
+			}
 	body
-		.navbar.navbar-inverse.navbar-fixed-top
-			.navbar-inner
-				.container
-					a.brand(href="/") seo-friendly stuff
-					.nav-collapse.collapse
-						ul.nav
-							li
-								a(href="https://github.com/oroce/") code
-							li
-								a(href="https://twitter.com/oroce") @oroce
-							li
-								a(href="https://github.com/oroce") oroce on GitHub
-
+		.menu
+			a(href="/") root
+			a(href="/list") list
+			a(href="/list/1") list item
 		.container.main
-			!= body
-			hr
-			.footer
-				p Built lovely in Budapest <3
-		- each script in scripts
-			script(src=script)
+			.list-item!= item
+			.items-list!= itemsList
+			.index!= index
+		script(src="http://code.jquery.com/jquery-1.9.1.min.js")
+		script(src="/js/bundle.js")

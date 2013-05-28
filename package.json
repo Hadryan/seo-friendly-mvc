@@ -5,7 +5,7 @@
   "description": "fuck, I can create seo friendly express app with backbone.",
   "main": "app.js",
   "scripts": {
-    "test": "npm test"
+    "test": "mocha test/*"
   },
   "repository": {
     "type": "git",
@@ -26,12 +26,7 @@
     "jadeify2": "0.0.3",
     "backbone": "~1.0.0",
     "supertest": "~0.6.0",
-    "grunt-cli": "~0.1.9",
     "mocha": "~1.10.0",
-    "grunt": "~0.4.1",
-    "browserify-middleware": "~1.10.0",
-    "grunt-contrib-clean": "~0.4.1",
-    "grunt-contrib-cssmin": "~0.6.1",
-    "grunt-contrib-jshint": "~0.5.4"
+    "browserify-middleware": "~1.10.0"
   }
 }
